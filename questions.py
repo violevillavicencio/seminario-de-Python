@@ -30,13 +30,12 @@ correct_answers_index = [1, 2, 0, 3, 1]
 # Combinar las tres listas usando zip
 questions_combined = list(zip(questions, answers, correct_answers_index))
 
-# funcion random.sample() permite que no se repitan elementos al mostrarlos
+# Funcion para no repetir elementos al mostrarlos 
 questions_to_ask = random.sample(questions_combined, k=3)
 
 puntaje = float(0)
 
 # El usuario deberá contestar 3 preguntas
-# Itero sobre la combinacion de listas 
 for question, answer_choices, correct_answer_index in questions_to_ask:
     # Se muestra la pregunta y las respuestas posibles
     print(question)
@@ -48,13 +47,17 @@ for question, answer_choices, correct_answer_index in questions_to_ask:
         user_answer = input("Respuesta: ")
         
         # Validamos que la respuesta ingresada sea un número
-        # Verificamos que la respuesta esté dentro del rango
-        if not user_answer.isdigit() or not (1 <= user_answer <= 4):
+        if not user_answer.isdigit():
             print('Respuesta no valida')
             sys.exit(1)  
         
         user_answer = int(user_answer)
         
+        # Verificamos que la respuesta esté dentro del rango
+        if not (1 <= user_answer <= 4):
+            print('Respuesta no valida')
+            sys.exit(1)  
+
         # Restamos 1 para que la respuesta esté en el rango de índices
         user_answer -= 1
 
@@ -63,15 +66,16 @@ for question, answer_choices, correct_answer_index in questions_to_ask:
             print("¡Correcto!")
             puntaje += 1
             break
+        # Cada vez que hace un intento fallido, se le restan puntos
+        # Compruebo que el puntaje sea mayor que cero asi no me queda negativo
+        elif puntaje >  0:
+            puntaje -= 0.5
     else:
         # Si el usuario no responde correctamente después de 2 intentos,
         # se muestra la respuesta correcta
-        print("La respuesta correcta es:")
+        print("Incorrecto. La respuesta correcta es:")
         print(answer_choices[correct_answer_index])
-        if puntaje != 0:
-            puntaje -= 0.5
-
-    # Se imprime un blanco al final de la pregunta  
+    # Se imprime un blanco al final de la pregunta
     print()
 
 print(f"Tu puntaje final fue de: {puntaje}")
