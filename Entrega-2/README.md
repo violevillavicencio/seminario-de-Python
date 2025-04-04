@@ -2,7 +2,7 @@ Para ver este proyecto, primero hay que clonar el repositorio.
 Se puede hacer con checkout parcial para descargar solamente la carpeta necesaria. 
 
 Desde la terminal, ejecutá los siguientes comandos: 
-git clone --depth 1 --filter=blob:none --sparse https://github.com/violevillavicencio/seminario-de-Python, luego cd sPython, después git sparse-checkout set Entrega-2, y por último cd Entrega-2.
+git clone --depth 1 --filter=blob:none --sparse https://github.com/violevillavicencio, luego cd seminario-de-Python, después git sparse-checkout set Entrega-2, y por último cd Entrega-2.
 
 Una vez dentro de la carpeta, se recomienda crear un entorno virtual. En Windows se hace con python -m venv venv y se activa con venv\Scripts\activate. En sistemas macOS o Linux, se usa python3 -m venv venv y se activa con source venv/bin/activate.
 
