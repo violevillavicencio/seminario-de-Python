@@ -1,31 +1,41 @@
-Para ver este proyecto, primero hay que clonar el repositorio.
-Se puede hacer con checkout parcial para descargar solamente la carpeta necesaria.
+Pasos para Ejecutar el Proyecto: 
+1. Clonar el repositorio
+Primero, clona el repositorio en tu máquina local. En la terminal ejecutá los siguientes comandos:
 
-Desde la terminal, ejecutá los siguientes comandos:
-git clone --depth 1 --filter=blob:none --sparse https://github.com/violevillavicencio/seminario-de-Python.git,
-luego cd seminario-de-Python,
-después git sparse-checkout set Entrega-2,
-y por último cd Entrega-2.
+git clone --depth 1 --filter=blob:none --sparse https://github.com/violevillavicencio/seminario-de-Python.git
+cd seminario-de-Python
+git sparse-checkout set Entrega-2
+cd Entrega-2
 
-Una vez dentro de la carpeta, se recomienda crear un entorno virtual.
-En Windows se hace con python -m venv venv y se activa con venv\Scripts\activate.
-En sistemas macOS o Linux, se usa python3 -m venv venv y se activa con source venv/bin/activate.
+2. Crear y activar un entorno virtual
+Es recomendable crear un entorno virtual para gestionar las dependencias del proyecto.
 
-Con el entorno virtual activado, hay que instalar las dependencias del proyecto usando el comando
-pip install -r requirements.txt.
-Si no tenés instalado Jupyter, podés agregarlo también con pip install notebook.
+En Windows:
+python -m venv venv
+venv\Scripts\activate
 
-Para ejecutar el proyecto, hay dos formas:
-podés abrir el notebook directamente con Jupyter usando
-jupyter notebook notebooks/resultados.ipynb,
-o bien ejecutar el script desde la terminal con
-python src/resultados.py.
+En macOS o Linux:
+python3 -m venv venv
+source venv/bin/activate
 
+3. Instalar las dependencias
+Con el entorno virtual activado, instala las dependencias necesarias del proyecto ejecutando el siguiente comando:
 
+pip install -r requirements.txt
 
+Si no tienes instalado Jupyter, puedes instalarlo también ejecutando:
 
+pip install notebook
 
+4. Ejecutar el proyecto
+Tienes dos formas de ejecutar el proyecto:
 
+Opción 1: Ejecutar el notebook con Jupyter
+Abre el notebook directamente con Jupyter ejecutando:
 
+jupyter notebook notebooks/resultados.ipynb
 
+Opción 2: Ejecutar el script desde la terminal
+Si prefieres ejecutar el script directamente desde la terminal, usa el siguiente comando:
 
+python src/resultados.py
