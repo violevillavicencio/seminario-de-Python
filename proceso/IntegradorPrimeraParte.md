@@ -100,8 +100,8 @@ Estos archivos fusionados se utilizan para análisis posteriores, visualizacione
 
 ---
 # 🧠 Objetivo de la función
-# Fusionar varios archivos .txt de un tipo (por ejemplo, usu_individual_*.txt) que están organizados en subcarpetas (una por trimestre),
-# generando un único archivo de salida que contenga todos los datos, con un solo encabezado.
+Fusionar varios archivos .txt de un tipo (por ejemplo, usu_individual_*.txt) que están organizados en subcarpetas (una por trimestre), 
+generando un único archivo de salida que contenga todos los datos, con un solo encabezado.
 
 from pathlib import Path
 
