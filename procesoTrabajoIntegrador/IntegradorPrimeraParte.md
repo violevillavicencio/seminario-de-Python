@@ -111,30 +111,31 @@ def fusionar_csv(nombre_prefijo: str, carpeta_entrada: Path, archivo_salida: Pat
     generando un único archivo con un solo encabezado.
     """
 
-    esta_encabezado = False  # 🧠 Esto se controla con la variable esta_encabezado, que al principio está en False.
+    esta_encabezado = False  
 
     with archivo_salida.open("w", encoding="utf-8") as salida:
 
-        # 🧾 1. carpeta_entrada.iterdir()
-        for subcarpeta in carpeta_entrada.iterdir():
-            # 🔍 2. if not subcarpeta.is_dir(): continue
+        # .iterdir() devuelve todos los archivos y carpetas dentro de una carpeta.
+        # subcarpeta en este caso puede ser una carpeta o un archivo.
+        for subcarpeta in carpeta_entrada.iterdir(): # recorre todos los elementos dentro de carpeta_entrada
+            # verifico que realmente es una carpeta
             if not subcarpeta.is_dir():
-                continue  # 🟨 ¿Por qué es importante? Porque sólo queremos procesar carpetas que contengan archivos .txt, no archivos sueltos.
+                continue  # 🟨 sólo queremos procesar carpetas que contengan archivos .txt, no archivos sueltos.
 
-            # 🔎 3. subcarpeta.glob(f"{nombre_prefijo}*.txt")
+            # .glob() Busca dentro de cada subcarpeta los archivos que: Comienzan con el nombre_prefijo (ej. "usu_individual_") y Terminan con .txt
             for archivo in subcarpeta.glob(f"{nombre_prefijo}*.txt"):
-                # 📄 4. Abrir el archivo y escribir su contenido
+                # Abrir el archivo y escribir su contenido
                 with archivo.open(encoding="utf-8") as f:
                     encabezado = f.readline()  # Leer el encabezado
 
-                    # ✔️ 5. Escribir encabezado solo una vez
+                    # ✔️ Escribir encabezado solo una vez
                     if not esta_encabezado:
                         salida.write(encabezado)
                         esta_encabezado = True
 
-                    # 🧾 6. Escribir el resto del archivo
+                    # 🧾 Escribir el resto del archivo
                     for linea in f:
                         salida.write(linea)
 
-    # ✅ 7. Mensaje de confirmación
+    # ✅ Mensaje de confirmación
     print(f"fusión de archivos generado: {archivo_salida.name}")
