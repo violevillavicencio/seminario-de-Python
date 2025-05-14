@@ -99,3 +99,42 @@ def fusionar_csv(nombre_prefijo: str, carpeta_entrada: Path, archivo_salida: Pat
 Estos archivos fusionados se utilizan para análisis posteriores, visualizaciones y generación de nuevas columnas derivadas.
 
 ---
+# 🧠 Objetivo de la función
+# Fusionar varios archivos .txt de un tipo (por ejemplo, usu_individual_*.txt) que están organizados en subcarpetas (una por trimestre),
+# generando un único archivo de salida que contenga todos los datos, con un solo encabezado.
+
+from pathlib import Path
+
+def fusionar_csv(nombre_prefijo: str, carpeta_entrada: Path, archivo_salida: Path):
+    """
+    Fusiona todos los archivos de texto que comienzan con nombre_prefijo dentro de las subcarpetas de carpeta_entrada,
+    generando un único archivo con un solo encabezado.
+    """
+
+    esta_encabezado = False  # 🧠 Esto se controla con la variable esta_encabezado, que al principio está en False.
+
+    with archivo_salida.open("w", encoding="utf-8") as salida:
+
+        # 🧾 1. carpeta_entrada.iterdir()
+        for subcarpeta in carpeta_entrada.iterdir():
+            # 🔍 2. if not subcarpeta.is_dir(): continue
+            if not subcarpeta.is_dir():
+                continue  # 🟨 ¿Por qué es importante? Porque sólo queremos procesar carpetas que contengan archivos .txt, no archivos sueltos.
+
+            # 🔎 3. subcarpeta.glob(f"{nombre_prefijo}*.txt")
+            for archivo in subcarpeta.glob(f"{nombre_prefijo}*.txt"):
+                # 📄 4. Abrir el archivo y escribir su contenido
+                with archivo.open(encoding="utf-8") as f:
+                    encabezado = f.readline()  # Leer el encabezado
+
+                    # ✔️ 5. Escribir encabezado solo una vez
+                    if not esta_encabezado:
+                        salida.write(encabezado)
+                        esta_encabezado = True
+
+                    # 🧾 6. Escribir el resto del archivo
+                    for linea in f:
+                        salida.write(linea)
+
+    # ✅ 7. Mensaje de confirmación
+    print(f"fusión de archivos generado: {archivo_salida.name}")
