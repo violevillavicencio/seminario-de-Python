@@ -1,47 +1,63 @@
-Procesamiento e información a obtener 
-Sección A: generación del dataset principal 
-1. Se debe definir una carpeta, cuyo path debe ser configurable vía una variable, donde se almacenarán el conjunto de archivos de “individuos” y “hogares”.   
-2. Se debe generar una sección de código dentro del notebook que busque en la mencionada carpeta cada uno de los archivos “individuos” y “hogares” y los una.  Es 
-decir, si en la carpeta tenemos tres archivos de individuos (año 2023 trimestre 1, año 2023 trimestre 2, año 2024 trimestre 1) se debe  leer la información de cada uno y 
-generar un dataset que contenga toda la información. 
-Recordar que dentro de las columnas de información se encuentra el año y trimestre, por lo que luego de unirse se puede conocer fácilmente el período al cual pertenece. 
-Esta operación automática de búsqueda y generación de dataset se debe realizar tanto para el archivo de individuos como el de hogares.
+# 🛠️ Procesamiento de Archivos Fusionados de Individuos y Hogares
 
-1) Manejo de rutas con pathlib y configuración mediante variables
+En mi parte me encargué del procesamiento de los archivos fusionados de individuos y hogares. Usé `pathlib` para definir rutas limpias, y un módulo llamado `fusionar_csv` para unir automáticamente los archivos por trimestre.
 
-- En este proyecto, el manejo de archivos y directorios se realizó utilizando el módulo estándar de Python pathlib, en lugar de definir rutas absolutas a mano.
+Luego traduje columnas con valores codificados (como `CH04`) a texto, y generé nuevas columnas como `MATERIAL_TECHUMBRE` y `CONDICION_DE_HABITABILIDAD` con base en múltiples condiciones de calidad.
 
-¿Por qué se requiere que la ruta sea configurable?
+Al final, guardamos todo en nuevos archivos `.csv` que contienen los datos listos para análisis, **sin tocar los originales**.
 
-- La consigna indicaba que el path donde se almacenan los datasets debía ser configurable mediante una variable. Esto tiene varias ventajas:
+---
 
-- Evita tener rutas "hardcodeadas" que sólo funcionan en una máquina específica.
+## 📊 Procesamiento e Información a Obtener
 
-- Permite reutilizar rutas de forma clara en distintos módulos o notebooks.
+### 🧩 Sección A: Generación del Dataset Principal
 
-- Facilita el mantenimiento y portabilidad del código dentro del equipo.
+1. Se debe definir una carpeta, cuyo *path* debe ser configurable vía una variable, donde se almacenarán el conjunto de archivos de **individuos** y **hogares**.  
+2. Se debe generar una sección de código dentro del notebook que busque en la mencionada carpeta cada uno de los archivos “individuos” y “hogares” y los una.  
 
-✅ Uso de pathlib
-En lugar de usar cadenas de texto, usamos objetos Path para componer rutas de forma segura y multiplataforma.
+Por ejemplo:  
+Si en la carpeta tenemos tres archivos de individuos (2023-T1, 2023-T2, 2024-T1), se debe leer la información de cada uno y generar un único dataset combinado.  
 
+> 📌 Recordá que dentro de las columnas se encuentra el **año** y **trimestre**, por lo que luego de unirse se puede conocer fácilmente el período al cual pertenece cada fila.
+
+Esta operación se debe realizar tanto para los archivos de **individuos** como de **hogares**.
+
+---
+
+1️⃣ Manejo de Rutas con `pathlib` y Configuración mediante Variables
+
+En este proyecto se usó el módulo estándar de Python `pathlib` para manejar archivos y rutas en lugar de cadenas de texto con rutas absolutas.
+
+### ❓ ¿Por qué se requiere que la ruta sea configurable?
+
+- ✅ Evita rutas *hardcodeadas*.
+- ✅ Permite reutilizar rutas de forma clara en distintos módulos o notebooks.
+- ✅ Facilita el mantenimiento y portabilidad del código.
+
+### 🧪 Ejemplo de uso:
+
+```python
 from pathlib import Path
 
-Ejemplo del proyecto:
 PROJECT_PATH = Path(__file__).resolve().parent.parent.parent
 FILES_PATH = PROJECT_PATH / "files_eph"
 FUSION_PATH = PROJECT_PATH / "fusion_eph"
 
-- PROJECT_PATH apunta a la raíz del proyecto, sin importar desde dónde se ejecute el código.
+- PROJECT_PATH: apunta a la raíz del proyecto, sin importar desde dónde se ejecute.
 
-- FILES_PATH representa la carpeta donde están los datasets originales, organizados por trimestre.
+- FILES_PATH: carpeta donde están los datasets originales.
 
-- FUSION_PATH representa la carpeta donde se guardan los archivos fusionados.
+- FUSION_PATH: carpeta donde se guardan los archivos fusionados.
 
-Ventajas de pathlib.Path
-Código legible	FILES_PATH / "T124" / "usu_individual_T124.txt"
-Multiplataforma (Windows/Linux)	Sin problemas con / o \
-Métodos útiles integrados	.exists(), .is_file(), .open()
-Reutilización segura	Se usa en todos los notebooks y módulos
+✅ Ventajas de pathlib.Path
+
+| Ventaja              | Descripción                                       |
+| -------------------- | ------------------------------------------------- |
+| Código legible       | `FILES_PATH / "T124" / "usu_individual_T124.txt"` |
+| Multiplataforma      | Funciona en Windows, Linux y macOS                |
+| Métodos integrados   | `.exists()`, `.is_file()`, `.open()`              |
+| Reutilización segura | Se usa en todo el proyecto                        |
+
 
 Gracias a esta implementación:
 
@@ -51,3 +67,51 @@ Gracias a esta implementación:
 
 - Se puede cambiar de carpeta con solo cambiar una variable (PROJECT_PATH).
 
+2️⃣ Fusión de Archivos "Individuos" y "Hogar"
+
+- En este proyecto se trabajó con múltiples archivos .txt por cada trimestre del relevamiento de la EPH. Para facilitar el análisis, se desarrolló un módulo que automatiza la unificación (fusión) de los archivos de cada tipo: usu_individual_* y usu_hogar_*
+
+❓ ¿Por qué unir los archivos?
+Cada trimestre tiene su propio archivo de individuos y hogares.
+
+Para analizarlos como un conjunto, deben combinarse.
+
+La fusión conserva el encabezado y evita duplicaciones.
+
+📦 ¿Qué hace el módulo fusionar_csv?
+
+def fusionar_csv(nombre_prefijo: str, carpeta_entrada: Path, archivo_salida: Path):
+
+Recorre todas las subcarpetas de la ruta carpeta_entrada (por ejemplo, files_eph/T124, T224, etc.).
+
+Busca archivos cuyo nombre comience con nombre_prefijo (como "usu_individual_" o "usu_hogar_").
+
+Lee cada archivo encontrado y los concatena en un único archivo CSV de salida, escribiendo el encabezado una sola vez.
+
+for subcarpeta in carpeta_entrada.iterdir():
+    for archivo in subcarpeta.glob(f"{nombre_prefijo}*"):
+        # Abre el archivo, lee el encabezado solo una vez
+        # Agrega las demás líneas al archivo final
+        
+Usa pathlib para manejar las rutas.
+
+Usa encoding="utf-8" para evitar errores de codificación.
+
+Es flexible: funciona con archivos .txt o .csv sin necesidad de cambiar la función.
+
+✅ Ventajas de este enfoque
+
+| Característica | Detalle                                                |
+| -------------- | ------------------------------------------------------ |
+| Modular        | Se importa desde cualquier notebook                    |
+| Reutilizable   | Funciona para individuos y hogares sin duplicar código |
+| Seguro         | Evita encabezados duplicados                           |
+| Automatizado   | Busca los archivos por nombre, sin indicar cada uno    |
+
+
+📁 Archivos generados
+fusion_eph/individuos_fusionado.csv
+
+fusion_eph/hogares_fusionado.csv
+
+Estos archivos se utilizan luego para análisis, visualizaciones y creación de nuevas columnas.
