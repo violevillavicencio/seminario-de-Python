@@ -139,3 +139,35 @@ def fusionar_csv(nombre_prefijo: str, carpeta_entrada: Path, archivo_salida: Pat
 
     # ✅ Mensaje de confirmación
     print(f"fusión de archivos generado: {archivo_salida.name}")
+---
+
+🔈 Traducimos campos codificados:
+
+CH04 → CH04_str: "Masculino"/"Femenino"
+
+NIVEL_ED → NIVEL_ED_str: nivel educativo en texto
+
+V4 → MATERIAL_TECHUMBRE: tipo de material
+
+🔧​ Creamos CONDICION_DE_HABITABILIDAD con reglas combinadas según calidad de piso, baño, cocina, acceso al agua y techo.
+
+🧠 ¿Por qué así?
+
+“No podíamos usar pandas, así que usamos csv.DictReader para leer fila por fila en forma de diccionario. Es eficiente y nos permite trabajar con claves entendibles.”
+
+“Usamos pathlib en lugar de os.path porque es más moderno, legible y seguro para manipular rutas.”
+
+“Guardamos los archivos con las columnas nuevas en archivos como *_fusionado_actualizado.csv para separar los originales de los procesados y evitar sobrescribir.”
+
+💬 Preguntas: 
+❓ ¿Por qué no usaron pandas?
+“Porque estaba explícitamente prohibido en la consigna. Por eso usamos solo módulos estándar como csv y pathlib.”
+
+❓ ¿Por qué usan DictReader en lugar de leer línea por línea?
+“Porque DictReader convierte cada fila en un diccionario. Eso hace que sea más claro acceder a los campos por nombre (fila['CH04'] en lugar de usar índices).”
+
+❓ ¿Qué pasa si hay valores faltantes?
+“Los manejamos con get() y validamos if valor == '' or valor is None. Así evitamos que el código se rompa.”
+
+❓ ¿Qué ventajas tuvo modularizar (fusionar_csv, constantes.py)?
+“Nos permitió reutilizar la lógica y mantener el notebook limpio, dejando ahí solo la parte explicativa y los resultados.”
